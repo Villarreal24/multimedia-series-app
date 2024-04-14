@@ -60,7 +60,7 @@ export function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#42A6C1',
+    backgroundColor: '#468EA2',
     alignItems: 'center',
     justifyContent: 'center',
   },

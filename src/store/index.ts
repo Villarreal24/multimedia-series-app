@@ -1,16 +1,16 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import { tvmazeApi } from './services/tvmazeApi';
 import { detailsSlice } from './slices/detailsSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     details: detailsSlice.reducer,
     [tvmazeApi.reducerPath]: tvmazeApi.reducer,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(tvmazeApi.middleware), // Agrega el middleware de la API
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      tvmazeApi.middleware,
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

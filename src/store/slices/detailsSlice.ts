@@ -1,25 +1,9 @@
 import { PayloadAction, createSlice, Slice } from '@reduxjs/toolkit';
+import { TvShow, DetailState } from '../../types/types';
 
-interface TvShow {
-  name: string;
-  poster: string;
-  genres: string;
-  summary: string;
-  image: {
-    original: string;
-  };
-  schedule: {
-    time: string;
-    days: string;
-  };
-}
-
-interface DetailsState {
-  data: TvShow;
-}
-
-const initialState: DetailsState = {
+const initialState: DetailState = {
   data: {
+    id: 0,
     name: '',
     poster: '',
     genres: '',
@@ -27,17 +11,24 @@ const initialState: DetailsState = {
     image: {
       original: '',
     },
+    rating: {
+      average: 0,
+    },
+    schedule: {
+      time: '',
+      days: '',
+    },
   },
 };
 
 // === TYPE OF SLICE ===
-type DetailsSliceType = Slice<DetailsState>;
+type DetailsSliceType = Slice<DetailState>;
 
 export const detailsSlice: DetailsSliceType = createSlice({
   name: 'details',
   initialState,
   reducers: {
-    setDetails(state, action: PayloadAction<object>) {
+    setDetails(state, action: PayloadAction<TvShow>) {
       state.data = action.payload;
     },
   },

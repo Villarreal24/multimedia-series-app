@@ -1,17 +1,38 @@
-import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native';
 import React from 'react';
-import { RootState } from '../store';
-import { useSelector } from 'react-redux';
+import HTML from 'react-native-render-html';
+import { TvShow } from '../types/types';
 
-export function ShowDetails() {
-  const data = useSelector((state: RootState) => state.details.data);
+export function ShowDetails({ data }: { data: TvShow }) {
+  const { width } = useWindowDimensions();
+
+  const tagStyles = {
+    p: styles.description,
+  };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Image source={{ uri: data.image.original }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{data.name}</Text>
-        <Text style={styles.description}>{data.summary}</Text>
+        <HTML
+          tagsStyles={tagStyles}
+          source={{ html: data.summary }}
+          contentWidth={width}
+        />
+
+        <View style={styles.rowContainer}>
+          <Text style={styles.genreText}>Rating</Text>
+          <Text style={styles.itemGenre}>{data.rating.average}</Text>
+        </View>
+
         <View style={styles.rowContainer}>
           <Text style={styles.genreText}>Genero</Text>
           {data.genres.map((item, idx) => (
@@ -20,6 +41,7 @@ export function ShowDetails() {
             </Text>
           ))}
         </View>
+
         {data.schedule.time !== '' ? (
           <View style={styles.rowContainer}>
             <Text style={styles.genreText}>Schedule</Text>
@@ -29,7 +51,7 @@ export function ShowDetails() {
           </View>
         ) : null}
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

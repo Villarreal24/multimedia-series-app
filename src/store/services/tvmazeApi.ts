@@ -1,6 +1,6 @@
 // Need to use the React-specific entry point to allow generating React hooks
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import type { Pokemon } from './types'
+import { Episode } from '../../types/types';
 
 interface Series {
   data: object;
@@ -11,18 +11,15 @@ export const tvmazeApi = createApi({
   reducerPath: 'pokemonApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://api.tvmaze.com/' }),
   endpoints: builder => ({
-    // getPokemonByName: builder.query<Pokemon, string>({
-    //   query: name => `pokemon/${name}`,
-    // }),
     getAllSeries: builder.query<Series[], void>({
       query: () => '/shows?page=0',
+    }),
+    getEpisodesById: builder.query<Episode[], number>({
+      query: id => `/shows/${id}/episodes`,
     }),
   }),
 });
 
 // Export hooks for usage in function components, which are
 // auto-generated based on the defined endpoints
-export const {
-  // useGetPokemonByNameQuery,
-  useGetAllSeriesQuery,
-} = tvmazeApi;
+export const { useGetAllSeriesQuery, useGetEpisodesByIdQuery } = tvmazeApi;

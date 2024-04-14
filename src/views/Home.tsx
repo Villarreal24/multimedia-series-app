@@ -1,11 +1,29 @@
-import { Text, View, StyleSheet, ScrollView, Image } from 'react-native';
-import React, { Component } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
+import React from 'react';
 import { Serie } from '../types/types';
 import { useGetAllSeriesQuery } from '../store/services/tvmazeApi';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import InputSearch from '../components/InputSearch';
+import { setDetails } from '../store/slices/detailsSlice';
 
 export function Home() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { data, isLoading } = useGetAllSeriesQuery();
+
+  const onPressHandler = payload => {
+    dispatch(setDetails(payload));
+    navigation.navigate('Details');
+  };
 
   return (
     <View style={styles.container}>
@@ -16,17 +34,22 @@ export function Home() {
       <ScrollView style={styles.scrollView}>
         <View style={styles.columnContainer}>
           {isLoading !== true ? (
-            data?.map((data: Serie, index: number) => (
-              <View key={index} style={styles.itemContainer}>
-                <Text style={styles.name}>{data.name}</Text>
+            data?.map((item: Serie, index: number) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.itemContainer}
+                onPress={() => onPressHandler(item)}>
+                <Text style={styles.name}>{item.name}</Text>
                 <Image
-                  source={{ uri: data.image.medium }}
+                  source={{ uri: item.image.medium }}
                   style={styles.image}
                 />
-              </View>
+              </TouchableOpacity>
             ))
           ) : (
-            <Text>Cargando...</Text>
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
           )}
         </View>
       </ScrollView>
@@ -37,9 +60,14 @@ export function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#42A6C1',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   searchContainer: {
+    marginTop: 30,
     height: '20%',
+    width: '100%',
     alignItems: 'center',
   },
   title: {
@@ -77,5 +105,15 @@ const styles = StyleSheet.create({
     width: 130,
     height: 180,
     borderRadius: 20,
+  },
+  loadingContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  loadingText: {
+    justifyContent: 'center',
+    fontSize: 26,
+    fontWeight: '600',
+    color: '#FFF',
   },
 });

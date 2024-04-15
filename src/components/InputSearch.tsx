@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     color: '#FFF',
     backgroundColor: '#73A7B6',
-    posiiton: 'relative',
+    position: 'relative',
   },
   clear: {
     position: 'absolute',

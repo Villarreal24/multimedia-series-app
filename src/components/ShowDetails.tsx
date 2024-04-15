@@ -24,7 +24,7 @@ export function ShowDetails({ data }: { data: TvShow }) {
         <ActivityIndicator style={styles.loader} size="large" color="#FFF" />
       )}
       <Image
-        source={{ uri: data.image.original }}
+        source={{ uri: data.image?.original }}
         style={styles.image}
         onLoadStart={() => setIsLoading(true)}
         onLoad={() => setIsLoading(false)}

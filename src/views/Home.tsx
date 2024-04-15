@@ -7,19 +7,37 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetAllSeriesQuery } from '../store/services/tvmazeApi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
 import { useNavigation } from '@react-navigation/native';
 import { InputSearch } from '../components/InputSearch';
 import { setDetails } from '../store/slices/detailsSlice';
+import { TvShow } from '../types/types';
 
 export function Home() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { data, isLoading } = useGetAllSeriesQuery();
+  const [allShows, setAllShows] = useState<TvShow[]>([]);
+  const dataSearched = useSelector((state: RootState) => state.details.search);
 
-  const onPressHandler = payload => {
+  // ==== USE EFFECT TO DETECT SEARCH AND SWITCH BETWEEN DATA ====
+  useEffect(() => {
+    if (dataSearched.length > 0) {
+      let newArray = [];
+      dataSearched.forEach(element => {
+        newArray.push(element.show);
+      });
+      setAllShows(newArray);
+    } else {
+      setAllShows(data);
+    }
+  }, [dataSearched, data]);
+
+  // ==== FUNCTION TO MOVE TO SCREEN DETAILS OF SHOW PRESSED ====
+  const onPressShow = payload => {
     dispatch(setDetails(payload));
     navigation.navigate('Details');
   };
@@ -30,17 +48,17 @@ export function Home() {
         <Text style={styles.title}>Hello, what do you want to search?</Text>
         <InputSearch />
       </View>
-      {!isLoading && data ? (
+      {!isLoading && allShows ? (
         <ScrollView style={styles.scrollView}>
           <View style={styles.columnContainer}>
-            {data.map((item, index) => (
+            {allShows.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.itemContainer}
-                onPress={() => onPressHandler(item)}>
+                onPress={() => onPressShow(item)}>
                 {/* <Text style={styles.name}>{item.name}</Text> */}
                 <Image
-                  source={{ uri: item.image.medium }}
+                  source={{ uri: item.image?.medium }}
                   style={styles.image}
                 />
               </TouchableOpacity>
@@ -67,6 +85,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     paddingTop: 15,
+    paddingBottom: 20,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: '#2A3E44',

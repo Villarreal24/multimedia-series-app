@@ -20,6 +20,7 @@ const initialState: DetailState = {
       days: '',
     },
   },
+  search: [],
 };
 
 // === TYPE OF SLICE ===
@@ -32,9 +33,12 @@ export const detailsSlice: DetailsSliceType = createSlice({
     setDetails(state, action: PayloadAction<TvShow>) {
       state.data = action.payload;
     },
+    setDataSearch(state, action: PayloadAction<TvShow>) {
+      state.search = action.payload;
+    },
   },
 });
 
-export const { setDetails } = detailsSlice.actions;
+export const { setDetails, setDataSearch } = detailsSlice.actions;
 
 export default detailsSlice.reducer;

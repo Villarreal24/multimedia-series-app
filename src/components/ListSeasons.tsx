@@ -58,7 +58,10 @@ export function ListSeasons({ data }: { data: Episode }) {
             <TouchableOpacity
               style={styles.episodeContainer}
               onPress={() => onPressHandler(item)}>
-              <Image source={{ uri: item.image.medium }} style={styles.image} />
+              <Image
+                source={{ uri: item.image?.medium }}
+                style={styles.image}
+              />
               <View style={styles.infoContainer}>
                 <Text style={styles.title}>
                   {item.number} - {item.name}
@@ -66,7 +69,9 @@ export function ListSeasons({ data }: { data: Episode }) {
                 <HTML
                   tagsStyles={tagStyles}
                   source={{
-                    html: `${item.summary.substring(0, 145)} ...`,
+                    html: item.summary
+                      ? `${item.summary?.substring(0, 145)} ...`
+                      : 'None',
                   }}
                   contentWidth={width}
                 />

@@ -11,7 +11,7 @@ import React from 'react';
 import { useGetAllSeriesQuery } from '../store/services/tvmazeApi';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import InputSearch from '../components/InputSearch';
+import { InputSearch } from '../components/InputSearch';
 import { setDetails } from '../store/slices/detailsSlice';
 
 export function Home() {
@@ -38,7 +38,7 @@ export function Home() {
                 key={index}
                 style={styles.itemContainer}
                 onPress={() => onPressHandler(item)}>
-                <Text style={styles.name}>{item.name}</Text>
+                {/* <Text style={styles.name}>{item.name}</Text> */}
                 <Image
                   source={{ uri: item.image.medium }}
                   style={styles.image}

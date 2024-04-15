@@ -1,35 +1,56 @@
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, TextInputProps } from 'react-native';
-import { useGetSearchByNameQuery } from '../store/services/tvmazeApi';
+import { TextInput, View, StyleSheet } from 'react-native';
+import { usePostSearchByNameMutation } from '../store/services/tvmazeApi';
 
-interface InputProps extends TextInputProps {
-  // Puedes añadir propiedades adicionales que necesites aquí
-}
+export function InputSearch() {
+  const [postSearch] = usePostSearchByNameMutation();
+  const [input, setInput] = useState<string>('');
 
-const InputSearch: React.FC<InputProps> = props => {
-  const { data, isLoading } = useGetSearchByNameQuery(input);
-  const [input, setInput] = useState('');
+  const handleInputChange = (text: string) => {
+    setInput(text);
+  };
+
+  const handleSearch = async () => {
+    await postSearch(input).then(resp => {
+      try {
+        console.log(resp);
+        if (resp.data) {
+          console.log('Works');
+        } else {
+          console.log('fail');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
   return (
-    <TextInput
-      {...props}
-      style={[styles.input, props.style]}
-      placeholder="Search"
-      placeholderTextColor="#FFF"
-    />
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Search"
+        placeholderTextColor="#FFF"
+        onChangeText={handleInputChange}
+        value={input}
+        onSubmitEditing={handleSearch}
+        returnKeyType="search"
+      />
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  input: {
-    height: 30,
+  container: {
+    flex: 1,
     width: '65%',
+  },
+  input: {
+    height: 35,
     paddingHorizontal: 15,
+    marginTop: 10,
     borderRadius: 20,
-    marginBottom: 25,
     color: '#FFF',
     backgroundColor: '#73A7B6',
   },
 });
-
-export default InputSearch;

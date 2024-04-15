@@ -1,5 +1,3 @@
-import { Episode } from '../views/Episode';
-
 export interface Serie {
   name: string;
   image: {

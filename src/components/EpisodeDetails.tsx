@@ -12,7 +12,7 @@ import { Episode } from '../types/types';
 
 export function EpisodeDetails({ data }: { data: Episode }) {
   const { width } = useWindowDimensions();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const tagStyles = {
     p: styles.description,

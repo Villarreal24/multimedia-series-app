@@ -9,6 +9,7 @@ const initialState: DetailState = {
     genres: '',
     summary: '',
     image: {
+      medium: '',
       original: '',
     },
     rating: {

@@ -13,7 +13,7 @@ export const tvmazeApi = createApi({
     getEpisodesById: builder.query<Episode[], number>({
       query: id => `/shows/${id}/episodes`,
     }),
-    getSearchByName: builder.query<Episode[], number>({
+    postSearchByName: builder.mutation<Episode[], string>({
       query: name => `/search/shows?q=${name}`,
     }),
   }),
@@ -24,5 +24,5 @@ export const tvmazeApi = createApi({
 export const {
   useGetAllSeriesQuery,
   useGetEpisodesByIdQuery,
-  useGetSearchByNameQuery,
+  usePostSearchByNameMutation,
 } = tvmazeApi;

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { useGetSearchByNameQuery } from '../store/services/tvmazeApi';
 
 interface InputProps extends TextInputProps {
   // Puedes añadir propiedades adicionales que necesites aquí
 }
 
 const InputSearch: React.FC<InputProps> = props => {
+  const { data, isLoading } = useGetSearchByNameQuery(input);
+  const [input, setInput] = useState('');
+
   return (
     <TextInput
       {...props}

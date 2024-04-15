@@ -4,11 +4,10 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  Button,
+  ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import { Serie } from '../types/types';
 import { useGetAllSeriesQuery } from '../store/services/tvmazeApi';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -31,10 +30,10 @@ export function Home() {
         <Text style={styles.title}>Hello, what do you want to search?</Text>
         <InputSearch />
       </View>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.columnContainer}>
-          {isLoading !== true ? (
-            data?.map((item: Serie, index: number) => (
+      {!isLoading && data ? (
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.columnContainer}>
+            {data.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.itemContainer}
@@ -45,14 +44,15 @@ export function Home() {
                   style={styles.image}
                 />
               </TouchableOpacity>
-            ))
-          ) : (
-            <View style={styles.loadingContainer}>
-              <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-          )}
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading...</Text>
+          <ActivityIndicator size="large" color="#FFF" />
         </View>
-      </ScrollView>
+      )}
     </View>
   );
 }
@@ -63,6 +63,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#468EA2',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollView: {
+    flex: 1,
+    paddingTop: 15,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    backgroundColor: '#2A3E44',
   },
   searchContainer: {
     marginTop: 30,
@@ -77,13 +84,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     width: '60%',
     paddingTop: 20,
-  },
-  scrollView: {
-    flex: 1,
-    paddingTop: 15,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    backgroundColor: '#2A3E44',
   },
   columnContainer: {
     flexDirection: 'row',
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   loadingContainer: {
+    paddingTop: 50,
     width: '100%',
     alignItems: 'center',
   },

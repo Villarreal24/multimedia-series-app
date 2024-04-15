@@ -3,14 +3,14 @@ import {
   View,
   StyleSheet,
   Image,
-  ActivityIndicator,
   useWindowDimensions,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState } from 'react';
 import HTML from 'react-native-render-html';
-import { TvShow } from '../types/types';
+import { Episode } from '../types/types';
 
-export function ShowDetails({ data }: { data: TvShow }) {
+export function EpisodeDetails({ data }: { data: Episode }) {
   const { width } = useWindowDimensions();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,7 +30,9 @@ export function ShowDetails({ data }: { data: TvShow }) {
         onLoad={() => setIsLoading(false)}
       />
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{data.name}</Text>
+        <Text style={styles.title}>
+          {data.season} x {data.number} - {data.name}
+        </Text>
         <HTML
           tagsStyles={tagStyles}
           source={{ html: data.summary }}
@@ -42,25 +44,10 @@ export function ShowDetails({ data }: { data: TvShow }) {
           <Text style={styles.itemGenre}>{data.rating.average}</Text>
         </View>
 
-        {data.genres ? (
-          <View style={styles.rowContainer}>
-            <Text style={styles.genreText}>Genero</Text>
-            {data.genres.map((item, idx) => (
-              <Text key={idx} style={styles.itemGenre}>
-                {item}
-              </Text>
-            ))}
-          </View>
-        ) : null}
-
-        {data.schedule && data.schedule.time !== '' ? (
-          <View style={styles.rowContainer}>
-            <Text style={styles.genreText}>Schedule</Text>
-            <Text style={styles.itemGenre}>
-              {data.schedule.days} at {data.schedule.time}
-            </Text>
-          </View>
-        ) : null}
+        <View style={styles.rowContainer}>
+          <Text style={styles.genreText}>Duration</Text>
+          <Text style={styles.itemGenre}>{data.runtime} minutes</Text>
+        </View>
       </View>
     </View>
   );
@@ -69,11 +56,12 @@ export function ShowDetails({ data }: { data: TvShow }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 35,
   },
   image: {
     width: '100%',
-    height: 450,
-    borderRadius: 20,
+    height: 250,
+    borderRadius: 0,
   },
   infoContainer: {
     padding: 20,
@@ -92,6 +80,7 @@ const styles = StyleSheet.create({
   },
   genreText: {
     color: '#FFF',
+    width: 90,
     paddingRight: 20,
   },
   rowContainer: {
@@ -105,7 +94,7 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     left: '45%',
-    top: '30%',
+    top: '20%',
     zIndex: 1,
   },
 });

@@ -1,3 +1,5 @@
+import { Episode } from '../views/Episode';
+
 export interface Serie {
   name: string;
   image: {
@@ -12,6 +14,7 @@ export interface TvShow {
   genres: string;
   summary: string;
   image: {
+    medium: string;
     original: string;
   };
   rating: {
@@ -33,8 +36,12 @@ export interface Episode {
   number: number;
   runtime: number;
   summary: string;
+  rating: {
+    average: number;
+  };
   image: {
     medium: string;
+    original: string;
   };
 }
 

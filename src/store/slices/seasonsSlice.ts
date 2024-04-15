@@ -8,8 +8,12 @@ const initialState: SeasonState = {
     number: 0,
     runtime: 0,
     summary: '',
+    rating: {
+      average: 0,
+    },
     image: {
       medium: '',
+      original: '',
     },
   },
 };
@@ -21,12 +25,12 @@ export const seasonsSlice: SeasonsSliceType = createSlice({
   name: 'seasons',
   initialState,
   reducers: {
-    setEpisodes(state, action: PayloadAction<Episode>) {
+    setEpisode(state, action: PayloadAction<Episode>) {
       state.data = action.payload;
     },
   },
 });
 
-export const { setEpisodes } = seasonsSlice.actions;
+export const { setEpisode } = seasonsSlice.actions;
 
 export default seasonsSlice.reducer;

@@ -6,64 +6,73 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import HTML from 'react-native-render-html';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { Episode } from '../types/types';
+import { setEpisode } from '../store/slices/seasonsSlice';
 
 export function ListSeasons({ data }: { data: Episode }) {
   const { width } = useWindowDimensions();
-  const [seasons, setSeasons] = useState(1);
-  const [seasonSelected, setSeasonSelected] = useState(null);
-  const [showFullDescription, setShowFullDescription] = useState(false);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [numSeasons, setNumSeasons] = useState(0);
+  const [seasonSelected, setSeasonSelected] = useState(1);
+  const seasons = Array(numSeasons)
+    .fill(0)
+    .map((_, index) => index + 1);
 
   useEffect(() => {
-    data.forEach((element, idx) => {
-      if (element.season > seasons) {
-        setSeasons(element.season);
+    data.forEach(element => {
+      if (element.season > numSeasons) {
+        setNumSeasons(element.season);
       }
     });
   }, [data]);
+
+  const onPressHandler = payload => {
+    dispatch(setEpisode(payload));
+    navigation.navigate('Episode');
+  };
 
   const tagStyles = {
     p: styles.description,
   };
 
-  //   const toggleDescription = () => {};
-
   return (
     <View style={styles.container}>
-      <Text>Numero de temporadas: {seasons}</Text>
-      {/* <Picker
+      <Picker
         selectedValue={seasonSelected}
-        style={{ height: 50, width: 150 }}
+        style={{ height: 50, width: 200, color: '#FFF' }}
         onValueChange={(item, idx) => setSeasonSelected(item)}>
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
-      </Picker> */}
+        {seasons.map((item, idx) => (
+          <Picker.Item key={idx} label={`Temporada ${item}`} value={item} />
+        ))}
+      </Picker>
 
       {data.map((item, idx) => (
-        <View key={idx} style={styles.episodeContainer}>
-          <Image source={{ uri: item.image.medium }} style={styles.image} />
-          <View style={styles.infoContainer}>
-            <Text style={styles.title}>{item.name}</Text>
-            {/* <View style={styles.descriptionContainer}> */}
-            <HTML
-              tagsStyles={tagStyles}
-              //   source={{ html: item.summary }}
-              source={{
-                html: `${item.summary.substring(0, 145)} ...`,
-              }}
-              contentWidth={width}
-            />
-            {/* {item.summary.length > 140 && (
-                <TouchableOpacity onPress={toggleDescription}>
-                  <Text style={styles.readMore}>
-                    {showFullDescription ? 'Ver menos...' : 'Ver más...'}
-                  </Text>
-                </TouchableOpacity>
-              )} */}
-            {/* </View> */}
-          </View>
+        <View key={idx}>
+          {item.season === seasonSelected ? (
+            <TouchableOpacity
+              style={styles.episodeContainer}
+              onPress={() => onPressHandler(item)}>
+              <Image source={{ uri: item.image.medium }} style={styles.image} />
+              <View style={styles.infoContainer}>
+                <Text style={styles.title}>
+                  {item.number} - {item.name}
+                </Text>
+                <HTML
+                  tagsStyles={tagStyles}
+                  source={{
+                    html: `${item.summary.substring(0, 145)} ...`,
+                  }}
+                  contentWidth={width}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : null}
         </View>
       ))}
     </View>
@@ -88,21 +97,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   title: {
+    width: '75%',
     fontSize: 17,
-    color: '#9C9C9C',
+    color: '#FFF',
     fontWeight: '600',
   },
-  //   descriptionContainer: {
-  //     flexDirection: 'row',
-  //   },
   description: {
     marginTop: 0,
     width: '74%',
     color: '#9C9C9C',
     fontSize: 11,
   },
-  //   readMore: {
-  //     color: 'blue',
-  //     fontWeight: '700',
-  //   },
 });
